@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BaseRepository
 {
-
     /**
      * @var Model
      */
@@ -39,7 +38,7 @@ class BaseRepository
     /**
      * @return Model
      */
-    public function getModel()
+    public function getModel(): Model
     {
         return $this->model;
     }
@@ -102,8 +101,7 @@ class BaseRepository
      */
     public function instance(array $attributes = [])
     {
-        $model = $this->model;
-        return new $model($attributes);
+        return new $this->$model($attributes);
     }
 
     /**
@@ -147,7 +145,7 @@ class BaseRepository
     public function validate(array $data = [], $rules = null, array $messages = [], array $customAttributes = [])
     {
         $validator = $this->validator($data, $rules, $messages, $customAttributes);
-        return $this->_validate($validator);
+        return $this->performValidation($validator);
     }
 
     /**
@@ -188,7 +186,7 @@ class BaseRepository
      * @return bool
      * @throws ValidationException
      */
-    protected function _validate(\Illuminate\Validation\Validator $validator)
+    protected function performValidation(\Illuminate\Validation\Validator $validator)
     {
         if (!empty($attributeNames = $this->validatorAttributeNames())) {
             $validator->setAttributeNames($attributeNames);
@@ -196,7 +194,11 @@ class BaseRepository
 
         if ($validator->fails()) {
             return false;
-            throw (new ValidationException)->setValidator($validator);
+
+            // it seems unnecessary to throw an exception immediately after returning false.
+            // You should remove the throw statement after returning false, as it will never be reached.
+
+            // throw (new ValidationException)->setValidator($validator);
         }
 
         return true;

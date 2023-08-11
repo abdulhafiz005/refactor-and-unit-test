@@ -1,0 +1,4 @@
+The controller demonstrates adherence to the Single Responsibility Principle through method organization by functionality. 
+However, it includes logic better suited for the repository. 
+The DistanceFeed method should use boolean values rather than hardcoded strings for improved code clarity and maintainability. 
+To enhance separation of concerns, consider moving data manipulation and database operations to the repository, leaving the controller focused on handling requests and responses.
